@@ -18,7 +18,7 @@ class HUDApp(tk.Tk):
         )
 
         self.is_mysql_connected()
-        
+
         # Load and display the image
         original_image = Image.open('/Users/kimjunho/Downloads/channels4_profile.png')
         resized_image = original_image.resize((200, 200), Image.BICUBIC)  # Set 'width' and 'height' to your desired values
@@ -39,7 +39,7 @@ class HUDApp(tk.Tk):
         self.air_label = tk.Label(self, text="Air Conditioner: Off", font=("Helvetica", 60))
         self.air_label.pack(anchor='center')
 
-        self.window_label = tk.Label(self, text="Window Open: 0 %", font=("Helvetica", 60))
+        self.window_label = tk.Label(self, text="Window: 0 % opened", font=("Helvetica", 60))
         self.window_label.pack(anchor='center')
 
         # Start the periodic update
@@ -61,13 +61,13 @@ class HUDApp(tk.Tk):
             passwd="12341234",
             db="piracer"
         )
-        
+
         try:
             with connection.cursor() as cursor:
                 cursor.execute("""
-                    SELECT speed, battery, motor_temp, is_aircondition_active, window_position 
-                    FROM piracer_status 
-                    ORDER BY data_id DESC 
+                    SELECT speed, battery, motor_temp, is_aircondition_active, window_position
+                    FROM piracer_status
+                    ORDER BY data_id DESC
                     LIMIT 1
                 """)
                 result = cursor.fetchone()
@@ -78,13 +78,13 @@ class HUDApp(tk.Tk):
                 current_temp = int(result[2])
                 current_air = "On" if result[3] == 1 else "Off"
                 current_window = int(result[4])
-                
+
                 self.speed_label.config(text=f"Speed: {current_speed:.2f} km/h")
                 self.battery_label.config(text=f"Battery: {current_battery:.2f}%")
                 self.temp_label.config(text=f"Motor Temp: {current_temp} °C")
                 self.air_label.config(text=f"Air Conditioner: {current_air}")
-                self.window_label.config(text=f"Window: {current_window} %")
-                
+                self.window_label.config(text=f"Window: {current_window} % opened")
+
                 print("speed :", current_speed)
                 print("battery :", current_battery)
                 print("temp :", current_temp)
